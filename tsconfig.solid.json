@@ -1,0 +1,19 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        "outDir": "./dist/solid",
+        "rootDir": "./src/solid",
+        "composite": true,
+        "tsBuildInfoFile": "./.tsbuildinfo/solid.tsbuildinfo"
+    },
+    "include": [
+        "src/solid/**/*.ts",
+        "src/solid/**/*.tsx"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

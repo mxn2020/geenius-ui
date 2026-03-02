@@ -1,0 +1,28 @@
+/**
+ * React UI Component Library — geenius-ui
+ *
+ * Main entry point for React components.
+ */
+
+// Re-export all components
+export * from './components'
+
+// Re-export hooks
+export * from './hooks'
+
+// Re-export custom composed components
+export * from './custom'
+
+// Re-export utilities
+export * from './lib/utils'
+
+export * from './lib/types'
+
+export * from './lib/helpers'
+
+export * from './lib/animation'
+
+// TanStack integrations (requires optional peer deps)
+export * from './tanstack-table'
+
+export * from './tanstack-ui'
