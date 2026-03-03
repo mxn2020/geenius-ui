@@ -1,121 +1,17 @@
 {
-  "name": "geenius-ui",
-  "version": "0.1.0",
-  "private": false,
+  "name": "@geenius-ui/monorepo",
+  "private": true,
   "type": "module",
-  "description": "Shared UI component library for React and Solid — by Geenius",
+  "description": "Geenius UI — Shared component library for React and Solid",
   "license": "MIT",
-  "exports": {
-    ".": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./react/components/*": {
-      "types": "./dist/react/components/*.d.ts",
-      "import": "./dist/react/components/*.js"
-    },
-    "./react/hooks/*": {
-      "types": "./dist/react/hooks/*.d.ts",
-      "import": "./dist/react/hooks/*.js"
-    },
-    "./react/lib/*": {
-      "types": "./dist/react/lib/*.d.ts",
-      "import": "./dist/react/lib/*.js"
-    },
-    "./solid": {
-      "solid": "./dist/solid/index.js",
-      "types": "./dist/solid/index.d.ts",
-      "default": "./dist/solid/index.js"
-    },
-    "./solid/components/*": {
-      "solid": "./dist/solid/components/*.js",
-      "types": "./dist/solid/components/*.d.ts",
-      "default": "./dist/solid/components/*.js"
-    },
-    "./solid/lib/*": {
-      "solid": "./dist/solid/lib/*.js",
-      "types": "./dist/solid/lib/*.d.ts",
-      "default": "./dist/solid/lib/*.js"
-    },
-    "./shared": {
-      "types": "./dist/shared/index.d.ts",
-      "import": "./dist/shared/index.js"
-    }
-  },
-  "files": [
-    "dist",
-    "src",
-    "README.md"
-  ],
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.solid.json",
-    "build:types": "pnpm build:types:react && pnpm build:types:solid",
-    "build:types:react": "tsc -p tsconfig.react.json",
-    "build:types:solid": "tsc -p tsconfig.solid.json",
-    "type-check": "pnpm type-check:react && pnpm type-check:solid",
-    "type-check:react": "tsc -p tsconfig.react.json --noEmit",
-    "type-check:solid": "tsc -p tsconfig.solid.json --noEmit",
-    "lint": "eslint .",
-    "clean": "rm -rf dist",
-    "prepublishOnly": "pnpm clean && pnpm build"
-  },
-  "dependencies": {
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.6.0"
-  },
-  "devDependencies": {
-    "@tanstack/match-sorter-utils": "^8.19.4",
-    "@tanstack/react-router": "^1.163.3",
-    "@tanstack/react-table": "^8.21.3",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "lucide-react": "^0.576.0",
-    "lucide-solid": "^0.576.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "solid-js": "^1.9.10",
-    "tsup": "^8.4.0",
-    "typescript": "^5.7.0"
-  },
-  "peerDependencies": {
-    "@tanstack/match-sorter-utils": ">=8.0.0",
-    "@tanstack/react-router": ">=1.0.0",
-    "@tanstack/react-table": ">=8.0.0",
-    "lucide-react": ">=0.300.0",
-    "lucide-solid": ">=0.300.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0",
-    "solid-js": "^1.9.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    },
-    "solid-js": {
-      "optional": true
-    },
-    "@tanstack/match-sorter-utils": {
-      "optional": true
-    },
-    "@tanstack/react-router": {
-      "optional": true
-    },
-    "@tanstack/react-table": {
-      "optional": true
-    },
-    "lucide-react": {
-      "optional": true
-    },
-    "lucide-solid": {
-      "optional": true
-    }
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean",
+    "type-check": "pnpm -r type-check",
+    "version:patch": "pnpm -r exec -- npm version patch --no-git-tag-version && npm version patch -m 'v%s'",
+    "version:minor": "pnpm -r exec -- npm version minor --no-git-tag-version && npm version minor -m 'v%s'",
+    "version:major": "pnpm -r exec -- npm version major --no-git-tag-version && npm version major -m 'v%s'",
+    "release": "git push && git push --tags",
+    "publish:all": "pnpm -r publish --access public"
   }
 }

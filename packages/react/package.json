@@ -1,0 +1,70 @@
+{
+    "name": "@geenius-ui/react",
+    "version": "0.1.0",
+    "private": false,
+    "type": "module",
+    "description": "React UI components — by Geenius",
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "clean": "rm -rf dist",
+        "type-check": "tsc --noEmit",
+        "prepublishOnly": "pnpm clean && pnpm build"
+    },
+    "dependencies": {
+        "@geenius-ui/shared": "workspace:*",
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^2.6.0"
+    },
+    "devDependencies": {
+        "@tanstack/match-sorter-utils": "^8.19.4",
+        "@tanstack/react-router": "^1.163.3",
+        "@tanstack/react-table": "^8.21.3",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "lucide-react": "^0.576.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "tsup": "^8.4.0",
+        "typescript": "^5.7.0"
+    },
+    "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0",
+        "@tanstack/react-router": ">=1.0.0",
+        "@tanstack/react-table": ">=8.0.0",
+        "@tanstack/match-sorter-utils": ">=8.0.0",
+        "lucide-react": ">=0.300.0"
+    },
+    "peerDependenciesMeta": {
+        "@tanstack/react-router": {
+            "optional": true
+        },
+        "@tanstack/react-table": {
+            "optional": true
+        },
+        "@tanstack/match-sorter-utils": {
+            "optional": true
+        },
+        "lucide-react": {
+            "optional": true
+        }
+    }
+}

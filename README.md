@@ -1,41 +1,27 @@
-# geenius-ui
+# @geenius-ui
 
 Shared UI component library for **React** and **Solid** — by Geenius.
 
-> 47 React components + 44 Solid components, all Tailwind-styled with CVA variants.
+> 47 React components + 44 Solid components — Tailwind CSS + CVA variants.
 
-## Installation
+## Packages
+
+| Package | Description | Install |
+|---|---|---|
+| `@geenius-ui/react` | React components | `pnpm add @geenius-ui/react` |
+| `@geenius-ui/solid` | Solid components | `pnpm add @geenius-ui/solid` |
+| `@geenius-ui/shared` | Shared types & constants | *(auto-installed)* |
+
+## Quick Start
+
+### React Project
 
 ```bash
-npm install geenius-ui
-# or
-pnpm add geenius-ui
+pnpm add @geenius-ui/react
 ```
-
-### Peer Dependencies
-
-Install the ones you need:
-
-```bash
-# For React projects
-pnpm add react react-dom
-
-# For Solid projects
-pnpm add solid-js
-
-# Optional: TanStack integrations
-pnpm add @tanstack/react-router @tanstack/react-table @tanstack/match-sorter-utils
-
-# Optional: Icons
-pnpm add lucide-react  # or lucide-solid
-```
-
-## Usage
-
-### React
 
 ```tsx
-import { Button, Card, Input, Dialog } from 'geenius-ui/react'
+import { Button, Card, Input, Dialog, cn } from '@geenius-ui/react'
 
 function App() {
   return (
@@ -47,10 +33,14 @@ function App() {
 }
 ```
 
-### Solid
+### Solid Project
+
+```bash
+pnpm add @geenius-ui/solid
+```
 
 ```tsx
-import { Button, Card, Input } from 'geenius-ui/solid'
+import { Button, Card, Input } from '@geenius-ui/solid'
 
 function App() {
   return (
@@ -62,10 +52,53 @@ function App() {
 }
 ```
 
-### Shared Types
+### Shared Types Only
+
+`@geenius-ui/shared` is auto-installed as a dependency of both `@geenius-ui/react` and `@geenius-ui/solid`, so you can import directly:
 
 ```ts
-import type { ButtonVariant, ComponentSize } from 'geenius-ui/shared'
+import type { ButtonVariant, ComponentSize, BadgeVariant } from '@geenius-ui/shared'
+```
+
+## Setup in Your Project
+
+### 1. Tailwind Config
+
+Add the library source to your Tailwind content paths:
+
+```ts
+// tailwind.config.ts
+export default {
+  content: [
+    './src/**/*.{ts,tsx}',
+    './node_modules/@geenius-ui/*/src/**/*.{ts,tsx}',
+  ],
+}
+```
+
+### 2. TypeScript Config (React)
+
+No special config needed — works out of the box with any React project:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler"
+  }
+}
+```
+
+### 3. TypeScript Config (Solid)
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "moduleResolution": "bundler"
+  }
+}
 ```
 
 ## Components
@@ -97,32 +130,29 @@ import type { ButtonVariant, ComponentSize } from 'geenius-ui/shared'
 ## Utilities
 
 ```tsx
-import { cn } from 'geenius-ui/react'
+import { cn } from '@geenius-ui/react'  // or '@geenius-ui/solid'
 
-// Merge Tailwind classes with proper precedence
 <div className={cn('bg-red-500', isActive && 'bg-blue-500')} />
 ```
 
-## Styling
+## Optional Peer Dependencies
 
-This library uses **Tailwind CSS** + **CVA** (class-variance-authority). Make sure your project's Tailwind config includes the library's source files:
+Install only what you use:
 
-```ts
-// tailwind.config.ts
-export default {
-  content: [
-    './src/**/*.{ts,tsx}',
-    './node_modules/geenius-ui/src/**/*.{ts,tsx}',
-  ],
-}
+```bash
+# TanStack integrations (React only)
+pnpm add @tanstack/react-router @tanstack/react-table @tanstack/match-sorter-utils
+
+# Icons
+pnpm add lucide-react  # or lucide-solid
 ```
 
 ## Development
 
 ```bash
-pnpm build          # Build all (React + Solid + Shared)
-pnpm type-check     # Type-check both frameworks
-pnpm clean          # Remove dist/
+pnpm build          # Build all packages
+pnpm clean          # Clean all dist/
+pnpm publish:all    # Publish all packages to npm
 ```
 
 ## License

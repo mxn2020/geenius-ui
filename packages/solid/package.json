@@ -1,0 +1,49 @@
+{
+    "name": "@geenius-ui/solid",
+    "version": "0.1.0",
+    "private": false,
+    "type": "module",
+    "description": "Solid UI components — by Geenius",
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist",
+        "type-check": "tsc --noEmit",
+        "prepublishOnly": "pnpm clean && pnpm build"
+    },
+    "dependencies": {
+        "@geenius-ui/shared": "workspace:*",
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^2.6.0"
+    },
+    "devDependencies": {
+        "solid-js": "^1.9.10",
+        "typescript": "^5.7.0"
+    },
+    "peerDependencies": {
+        "solid-js": "^1.9.0",
+        "lucide-solid": ">=0.300.0"
+    },
+    "peerDependenciesMeta": {
+        "lucide-solid": {
+            "optional": true
+        }
+    }
+}
