@@ -1,6 +1,6 @@
 {
     "name": "@geenius-ui/solid",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "private": false,
     "type": "module",
     "description": "Solid UI components — by Geenius",
@@ -31,19 +31,14 @@
         "@geenius-ui/shared": "workspace:*",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
-        "tailwind-merge": "^2.6.0"
+        "tailwind-merge": "^2.6.0",
+        "lucide-solid": "^0.300.0"
     },
     "devDependencies": {
         "solid-js": "^1.9.10",
         "typescript": "^5.7.0"
     },
     "peerDependencies": {
-        "solid-js": "^1.9.0",
-        "lucide-solid": ">=0.300.0"
-    },
-    "peerDependenciesMeta": {
-        "lucide-solid": {
-            "optional": true
-        }
+        "solid-js": "^1.9.0"
     }
 }
