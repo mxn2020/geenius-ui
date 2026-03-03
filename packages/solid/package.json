@@ -1,6 +1,6 @@
 {
     "name": "@geenius-ui/solid",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "private": false,
     "type": "module",
     "description": "Solid UI components — by Geenius",
@@ -31,8 +31,8 @@
         "@geenius-ui/shared": "workspace:*",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
-        "tailwind-merge": "^2.6.0",
-        "lucide-solid": "^0.300.0"
+        "lucide-solid": "^0.576.0",
+        "tailwind-merge": "^2.6.0"
     },
     "devDependencies": {
         "solid-js": "^1.9.10",
