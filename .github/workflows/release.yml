@@ -47,6 +47,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Publish @geenius-ui/react-css
+        run: pnpm --filter @geenius-ui/react-css publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @geenius-ui/solid-css
+        run: pnpm --filter @geenius-ui/solid-css publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Generate changelog
         id: changelog
         run: |
@@ -75,7 +85,9 @@ jobs:
             | Package | Version |
             |---|---|
             | `@geenius-ui/react` | [${{ github.ref_name }}](https://www.npmjs.com/package/@geenius-ui/react) |
+            | `@geenius-ui/react-css` | [${{ github.ref_name }}](https://www.npmjs.com/package/@geenius-ui/react-css) |
             | `@geenius-ui/solid` | [${{ github.ref_name }}](https://www.npmjs.com/package/@geenius-ui/solid) |
+            | `@geenius-ui/solid-css` | [${{ github.ref_name }}](https://www.npmjs.com/package/@geenius-ui/solid-css) |
             | `@geenius-ui/shared` | [${{ github.ref_name }}](https://www.npmjs.com/package/@geenius-ui/shared) |
           generate_release_notes: true
         env:
