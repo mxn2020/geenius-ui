@@ -1,5 +1,5 @@
 /**
- * Solid UI Component Library
+ * Solid UI Component Library — geenius-ui
  *
  * Main entry point for Solid components.
  */
@@ -8,9 +8,16 @@
 export * from './components'
 
 // Re-export hooks
-// export * from './hooks' // TODO: Uncomment when hooks are added
+export * from './hooks'
+
+// Re-export custom composed components
+export * from './custom'
 
 // Re-export utilities
 export * from './lib/utils'
 
 export * from './lib/types'
+
+export * from './lib/helpers'
+
+export * from './lib/animation'

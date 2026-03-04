@@ -4,6 +4,21 @@
     "private": false,
     "type": "module",
     "description": "Solid UI components — by Geenius",
+    "author": "Mehdi Nabhani <mehdi@geenius.app>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mxn2020/geenius-ui.git",
+        "directory": "packages/solid"
+    },
+    "keywords": [
+        "ui",
+        "components",
+        "solid",
+        "solidjs",
+        "design-system",
+        "geenius",
+        "tailwind"
+    ],
     "license": "MIT",
     "publishConfig": {
         "access": "public"
@@ -22,8 +37,11 @@
         "src"
     ],
     "scripts": {
+        "dev": "tsc --noEmit --watch",
         "build": "tsc",
         "clean": "rm -rf dist",
+        "lint": "eslint src --ext .ts,.tsx",
+        "test": "vitest run",
         "type-check": "tsc --noEmit",
         "prepublishOnly": "pnpm clean && pnpm build"
     },

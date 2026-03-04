@@ -1,5 +1,9 @@
 # @geenius-ui
 
+[![CI](https://github.com/mxn2020/geenius-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/mxn2020/geenius-ui/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@geenius-ui/react-css)](https://www.npmjs.com/package/@geenius-ui/react-css)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 Shared UI component library for **React** and **Solid** — by Geenius.
 
 > 47 React + 44 Solid components × 2 styling variants = **full coverage**.

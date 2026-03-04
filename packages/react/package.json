@@ -4,6 +4,20 @@
     "private": false,
     "type": "module",
     "description": "React UI components — by Geenius",
+    "author": "Mehdi Nabhani <mehdi@geenius.app>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mxn2020/geenius-ui.git",
+        "directory": "packages/react"
+    },
+    "keywords": [
+        "ui",
+        "components",
+        "react",
+        "design-system",
+        "geenius",
+        "tailwind"
+    ],
     "license": "MIT",
     "publishConfig": {
         "access": "public"
@@ -22,8 +36,11 @@
         "src"
     ],
     "scripts": {
+        "dev": "tsc --noEmit --watch",
         "build": "tsup",
         "clean": "rm -rf dist",
+        "lint": "eslint src --ext .ts,.tsx",
+        "test": "vitest run",
         "type-check": "tsc --noEmit",
         "prepublishOnly": "pnpm clean && pnpm build"
     },

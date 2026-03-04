@@ -24,11 +24,11 @@ const sizeClasses = {
 const variantClasses = {
   default: {
     base: 'border border-border bg-card text-foreground hover:bg-surface',
-    pressed: 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'
+    pressed: 'bg-primary text-primary-foreground border-primary hover:bg-primary/90'
   },
   outline: {
     base: 'border-2 border-border bg-transparent text-foreground hover:bg-surface',
-    pressed: 'border-blue-600 bg-blue-50 text-blue-700 hover:bg-blue-100'
+    pressed: 'border-primary bg-primary/10 text-primary hover:bg-primary/15'
   }
 }
 
@@ -63,7 +63,7 @@ export const Toggle: Component<ToggleProps> = (props) => {
   const toggleClassName = () => cn(
     'inline-flex items-center justify-center rounded-md font-medium cursor-pointer',
     'transition-colors duration-200',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+    'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
     sizeClasses[local.size ?? 'md'],
     local.pressed ? variantStyles().pressed : variantStyles().base,
     local.disabled && 'cursor-not-allowed opacity-50',

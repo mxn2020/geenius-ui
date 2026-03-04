@@ -1,4 +1,4 @@
-import { splitProps, type JSX, type ParentComponent, type Component } from 'solid-js'
+import { splitProps, createSignal, createEffect, onCleanup, type JSX, type ParentComponent, type Component } from 'solid-js'
 import { Show } from 'solid-js/web'
 import { cx } from '../lib/cx'
 import type { ButtonVariant, ButtonSize } from '../lib/types'
@@ -195,3 +195,338 @@ export const ViewSwitcher: Component<{ views: { value: string; label: JSX.Elemen
         ))}
     </div>
 )
+
+// Table sub-components
+export const TableHeader: ParentComponent<{ class?: string }> = (p) => <thead class={cx('gui-table__header', p.class)}>{p.children}</thead>
+export const TableBody: ParentComponent<{ class?: string }> = (p) => <tbody class={cx('gui-table__body', p.class)}>{p.children}</tbody>
+export const TableRow: ParentComponent<{ class?: string }> = (p) => <tr class={cx('gui-table__row', p.class)}>{p.children}</tr>
+export const TableHead: ParentComponent<{ class?: string }> = (p) => <th class={cx('gui-table__head', p.class)}>{p.children}</th>
+export const TableCell: ParentComponent<{ class?: string }> = (p) => <td class={cx('gui-table__cell', p.class)}>{p.children}</td>
+
+// ================================================================
+// Interactive / Compound components
+// ================================================================
+
+// Dialog
+export const Dialog: ParentComponent<{ open?: boolean; onClose?: () => void; class?: string }> = (p) => (
+    <Show when={p.open}>
+        <div class="gui-overlay" onClick={p.onClose} />
+        <div class={cx('gui-dialog', p.class)} role="dialog" aria-modal="true">{p.children}</div>
+    </Show>
+)
+export const DialogHeader: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dialog__header', p.class)}>{p.children}</div>
+export const DialogTitle: ParentComponent<{ class?: string }> = (p) => <h2 class={cx('gui-dialog__title', p.class)}>{p.children}</h2>
+export const DialogDescription: ParentComponent<{ class?: string }> = (p) => <p class={cx('gui-dialog__description', p.class)}>{p.children}</p>
+export const DialogFooter: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dialog__footer', p.class)}>{p.children}</div>
+
+// Modal (wrapper around Dialog)
+export const Modal: ParentComponent<{ open?: boolean; onClose?: () => void; title?: string; class?: string }> = (p) => (
+    <Dialog open={p.open} onClose={p.onClose} class={p.class}>
+        <Show when={p.title}><DialogHeader><DialogTitle>{p.title}</DialogTitle></DialogHeader></Show>
+        {p.children}
+    </Dialog>
+)
+
+// Sheet
+export const Sheet: ParentComponent<{ open?: boolean; onClose?: () => void; side?: 'left' | 'right' | 'top' | 'bottom'; class?: string }> = (p) => (
+    <Show when={p.open}>
+        <div class="gui-overlay" onClick={p.onClose} />
+        <div class={cx('gui-sheet', `gui-sheet--${p.side || 'right'}`, p.class)} role="dialog" aria-modal="true">{p.children}</div>
+    </Show>
+)
+export const SheetHeader: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dialog__header', p.class)}>{p.children}</div>
+export const SheetTitle: ParentComponent<{ class?: string }> = (p) => <h2 class={cx('gui-dialog__title', p.class)}>{p.children}</h2>
+export const SheetDescription: ParentComponent<{ class?: string }> = (p) => <p class={cx('gui-dialog__description', p.class)}>{p.children}</p>
+export const SheetFooter: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dialog__footer', p.class)}>{p.children}</div>
+export const SheetClose: ParentComponent<{ class?: string; onClick?: () => void }> = (p) => (
+    <button type="button" class={cx('gui-sheet__close', p.class)} onClick={p.onClick}>{p.children || '×'}</button>
+)
+
+// Tabs
+export const Tabs: Component<{ tabs: { value: string; label: JSX.Element; content: JSX.Element }[]; active: string; onChange: (v: string) => void; class?: string }> = (p) => (
+    <div class={cx('gui-tabs', p.class)}>
+        <div class="gui-tabs__list" role="tablist">
+            {p.tabs.map(t => (
+                <button type="button" role="tab" aria-selected={p.active === t.value}
+                    class={cx('gui-tabs__trigger', p.active === t.value && 'gui-tabs__trigger--active')}
+                    onClick={() => p.onChange(t.value)}>{t.label}</button>
+            ))}
+        </div>
+        <div class="gui-tabs__content" role="tabpanel">
+            {p.tabs.find(t => t.value === p.active)?.content}
+        </div>
+    </div>
+)
+
+// Collapsible
+export const Collapsible: ParentComponent<{ open?: boolean; onToggle?: () => void; trigger: JSX.Element; class?: string }> = (p) => (
+    <div class={cx('gui-collapsible', p.class)}>
+        <button type="button" class="gui-collapsible__trigger" onClick={p.onToggle}>{p.trigger}</button>
+        <Show when={p.open}>
+            <div class="gui-collapsible__content">{p.children}</div>
+        </Show>
+    </div>
+)
+
+// DropdownMenu
+export const DropdownMenu: ParentComponent<{ open?: boolean; onClose?: () => void; trigger: JSX.Element; class?: string }> = (p) => (
+    <div class={cx('gui-dropdown', p.class)}>
+        {p.trigger}
+        <Show when={p.open}>
+            <div class="gui-dropdown__menu">{p.children}</div>
+        </Show>
+    </div>
+)
+export const DropdownMenuItem: ParentComponent<{ onClick?: () => void; class?: string; disabled?: boolean }> = (p) => (
+    <button type="button" class={cx('gui-dropdown-item', p.disabled && 'gui-dropdown-item--disabled', p.class)} disabled={p.disabled} onClick={p.onClick}>{p.children}</button>
+)
+export const DropdownMenuSeparator: Component<{ class?: string }> = (p) => <div class={cx('gui-separator gui-separator--horizontal', p.class)} />
+export const DropdownMenuLabel: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dropdown-label', p.class)}>{p.children}</div>
+
+// Popover
+export const Popover: ParentComponent<{ open?: boolean; onClose?: () => void; trigger: JSX.Element; class?: string }> = (p) => (
+    <div class={cx('gui-popover-wrapper', p.class)}>
+        {p.trigger}
+        <Show when={p.open}>
+            <div class="gui-popover">{p.children}</div>
+        </Show>
+    </div>
+)
+
+// Toggle
+export const Toggle: Component<{ pressed?: boolean; onPressedChange?: (v: boolean) => void; disabled?: boolean; size?: 'sm' | 'md' | 'lg'; class?: string; children?: JSX.Element }> = (p) => (
+    <button type="button" role="button" aria-pressed={p.pressed} disabled={p.disabled}
+        class={cx('gui-toggle', p.pressed && 'gui-toggle--pressed', p.size && p.size !== 'md' && `gui-toggle--${p.size}`, p.disabled && 'gui-toggle--disabled', p.class)}
+        onClick={() => !p.disabled && p.onPressedChange?.(!p.pressed)}>{p.children}</button>
+)
+
+// ToggleGroup
+export const ToggleGroup: Component<{ options: { value: string; label: JSX.Element }[]; value: string | string[]; onChange: (v: string) => void; class?: string }> = (p) => (
+    <div class={cx('gui-toggle-group', p.class)} role="group">
+        {p.options.map(o => (
+            <button type="button" aria-pressed={Array.isArray(p.value) ? p.value.includes(o.value) : p.value === o.value}
+                class={cx('gui-toggle', (Array.isArray(p.value) ? p.value.includes(o.value) : p.value === o.value) && 'gui-toggle--pressed')}
+                onClick={() => p.onChange(o.value)}>{o.label}</button>
+        ))}
+    </div>
+)
+
+// AlertDialog
+export const AlertDialog: ParentComponent<{ open?: boolean; onClose?: () => void; class?: string }> = (p) => (
+    <Show when={p.open}>
+        <div class="gui-overlay" />
+        <div class={cx('gui-dialog', p.class)} role="alertdialog" aria-modal="true">{p.children}</div>
+    </Show>
+)
+export const AlertDialogHeader: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dialog__header', p.class)}>{p.children}</div>
+export const AlertDialogTitle: ParentComponent<{ class?: string }> = (p) => <h2 class={cx('gui-dialog__title', p.class)}>{p.children}</h2>
+export const AlertDialogDescription: ParentComponent<{ class?: string }> = (p) => <p class={cx('gui-dialog__description', p.class)}>{p.children}</p>
+export const AlertDialogFooter: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-dialog__footer', p.class)}>{p.children}</div>
+export const AlertDialogAction: ParentComponent<{ onClick?: () => void; class?: string }> = (p) => (
+    <button type="button" class={cx('gui-btn gui-btn--primary gui-btn--md', p.class)} onClick={p.onClick}>{p.children}</button>
+)
+export const AlertDialogCancel: ParentComponent<{ onClick?: () => void; class?: string }> = (p) => (
+    <button type="button" class={cx('gui-btn gui-btn--secondary gui-btn--md', p.class)} onClick={p.onClick}>{p.children}</button>
+)
+
+// RadioGroup
+export const RadioGroup: ParentComponent<{ value?: string; onChange?: (v: string) => void; class?: string }> = (p) => (
+    <div class={cx('gui-radio-group', p.class)} role="radiogroup">{p.children}</div>
+)
+export const Radio: Component<{ value: string; label?: string; checked?: boolean; onChange?: (v: string) => void; disabled?: boolean; class?: string }> = (p) => {
+    const id = `gui-radio-${Math.random().toString(36).slice(2)}`
+    return (
+        <div class={cx('gui-radio', p.disabled && 'gui-radio--disabled', p.class)}>
+            <input type="radio" id={id} class="gui-radio__input" value={p.value} checked={p.checked} disabled={p.disabled} onChange={() => p.onChange?.(p.value)} />
+            <Show when={p.label}><label for={id} class="gui-radio__label">{p.label}</label></Show>
+        </div>
+    )
+}
+
+// Slider
+export const Slider: Component<{ value?: number; min?: number; max?: number; step?: number; onChange?: (v: number) => void; class?: string }> = (p) => (
+    <input type="range" class={cx('gui-slider', p.class)} value={p.value ?? 50} min={p.min ?? 0} max={p.max ?? 100} step={p.step ?? 1}
+        onInput={(e) => p.onChange?.(Number(e.currentTarget.value))} />
+)
+
+// Tooltip
+export const Tooltip: ParentComponent<{ text: string; class?: string }> = (p) => (
+    <span class={cx('gui-tooltip-wrapper', p.class)}>
+        {p.children}
+        <span class="gui-tooltip" role="tooltip">{p.text}</span>
+    </span>
+)
+
+// Breadcrumb
+export const Breadcrumb: Component<{ items: { label: string; href?: string }[]; class?: string }> = (p) => (
+    <nav class={cx('gui-breadcrumb', p.class)} aria-label="Breadcrumb">
+        {p.items.map((item, i) => (
+            <span>
+                {i > 0 && <span class="gui-breadcrumb__separator">/</span>}
+                <span class={cx('gui-breadcrumb__item', i === p.items.length - 1 && 'gui-breadcrumb__item--current')}>
+                    {item.href ? <a href={item.href}>{item.label}</a> : item.label}
+                </span>
+            </span>
+        ))}
+    </nav>
+)
+
+// Resizable
+export const Resizable: ParentComponent<{ class?: string; minWidth?: number; minHeight?: number }> = (p) => (
+    <div class={p.class} style={{ resize: 'both', overflow: 'auto', 'min-width': p.minWidth ? `${p.minWidth}px` : undefined, 'min-height': p.minHeight ? `${p.minHeight}px` : undefined }}>
+        {p.children}
+    </div>
+)
+
+// ================================================================
+// Calendar / Date components
+// ================================================================
+
+const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+function isSameDay(a: Date, b: Date) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate() }
+
+export const Calendar: Component<{ selected?: Date | null; onSelect?: (d: Date) => void; class?: string }> = (p) => {
+    const today = new Date()
+    const [viewYear, setViewYear] = createSignal(p.selected?.getFullYear() ?? today.getFullYear())
+    const [viewMonth, setViewMonth] = createSignal(p.selected?.getMonth() ?? today.getMonth())
+
+    const daysInMonth = () => new Date(viewYear(), viewMonth() + 1, 0).getDate()
+    const firstDay = () => new Date(viewYear(), viewMonth(), 1).getDay()
+
+    const prevMonth = () => { if (viewMonth() === 0) { setViewMonth(11); setViewYear(y => y - 1) } else setViewMonth(m => m - 1) }
+    const nextMonth = () => { if (viewMonth() === 11) { setViewMonth(0); setViewYear(y => y + 1) } else setViewMonth(m => m + 1) }
+
+    const days = () => {
+        const result: (number | null)[] = []
+        for (let i = 0; i < firstDay(); i++) result.push(null)
+        for (let d = 1; d <= daysInMonth(); d++) result.push(d)
+        return result
+    }
+
+    return (
+        <div class={cx('gui-calendar', p.class)}>
+            <div class="gui-calendar__header">
+                <button type="button" class="gui-calendar__nav" onClick={prevMonth}>‹</button>
+                <span class="gui-calendar__title">{MONTHS[viewMonth()]} {viewYear()}</span>
+                <button type="button" class="gui-calendar__nav" onClick={nextMonth}>›</button>
+            </div>
+            <div class="gui-calendar__grid">
+                {DAYS.map(d => <div class="gui-calendar__day-label">{d}</div>)}
+                {days().map(day => (
+                    <div class="gui-calendar__cell">
+                        <Show when={day !== null}>
+                            <button type="button"
+                                class={cx('gui-calendar__day',
+                                    p.selected && isSameDay(new Date(viewYear(), viewMonth(), day!), p.selected) && 'gui-calendar__day--selected',
+                                    isSameDay(new Date(viewYear(), viewMonth(), day!), today) && 'gui-calendar__day--today',
+                                )}
+                                onClick={() => p.onSelect?.(new Date(viewYear(), viewMonth(), day!))}>{day}</button>
+                        </Show>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export const DatePicker: Component<{ value?: Date | null; onChange?: (d: Date) => void; placeholder?: string; class?: string }> = (p) => {
+    const [open, setOpen] = createSignal(false)
+    const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+    return (
+        <div class={cx('gui-datepicker', p.class)}>
+            <button type="button" class="gui-datepicker__trigger" onClick={() => setOpen(!open())}>
+                <span class={cx(!p.value && 'gui-datepicker__placeholder')}>{p.value ? fmt(p.value) : (p.placeholder || 'Select date')}</span>
+            </button>
+            <Show when={open()}>
+                <div class="gui-datepicker__dropdown">
+                    <Calendar selected={p.value} onSelect={(d) => { p.onChange?.(d); setOpen(false) }} />
+                </div>
+            </Show>
+        </div>
+    )
+}
+
+export const DateTimePicker: Component<{ value?: Date | null; onChange?: (d: Date) => void; placeholder?: string; class?: string }> = (p) => {
+    const [open, setOpen] = createSignal(false)
+    const [hours, setHours] = createSignal(p.value?.getHours() ?? 12)
+    const [minutes, setMinutes] = createSignal(p.value?.getMinutes() ?? 0)
+    const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) + ` ${String(hours()).padStart(2, '0')}:${String(minutes()).padStart(2, '0')}`
+    return (
+        <div class={cx('gui-datepicker', p.class)}>
+            <button type="button" class="gui-datepicker__trigger" onClick={() => setOpen(!open())}>
+                <span class={cx(!p.value && 'gui-datepicker__placeholder')}>{p.value ? fmt(p.value) : (p.placeholder || 'Select date & time')}</span>
+            </button>
+            <Show when={open()}>
+                <div class="gui-datepicker__dropdown">
+                    <Calendar selected={p.value} onSelect={(d) => { d.setHours(hours(), minutes()); p.onChange?.(d) }} />
+                    <div class="gui-datepicker__time">
+                        <label class="gui-label">Time</label>
+                        <div class="gui-datepicker__time-inputs">
+                            <input type="number" class="gui-input" min="0" max="23" value={hours()} onInput={(e) => setHours(Number(e.currentTarget.value))} style={{ width: '4rem' }} />
+                            <span>:</span>
+                            <input type="number" class="gui-input" min="0" max="59" value={minutes()} onInput={(e) => setMinutes(Number(e.currentTarget.value))} style={{ width: '4rem' }} />
+                        </div>
+                    </div>
+                </div>
+            </Show>
+        </div>
+    )
+}
+
+export const CalendarInput: Component<{ value?: Date | null; onChange?: (d: Date) => void; placeholder?: string; label?: string; error?: string; class?: string }> = (p) => {
+    const [open, setOpen] = createSignal(false)
+    const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
+    return (
+        <div class={cx('gui-calendar-input', p.class)}>
+            <Show when={p.label}><label class="gui-label">{p.label}</label></Show>
+            <div class="gui-calendar-input__wrapper">
+                <input type="text" class={cx('gui-input', p.error && 'gui-input--error')} value={p.value ? fmt(p.value) : ''} onFocus={() => setOpen(true)} placeholder={p.placeholder || 'MM/DD/YYYY'} readOnly />
+                <button type="button" class="gui-calendar-input__icon" onClick={() => setOpen(!open())} aria-label="Open calendar">📅</button>
+            </div>
+            <Show when={p.error}><p class="gui-calendar-input__error">{p.error}</p></Show>
+            <Show when={open()}>
+                <div class="gui-datepicker__dropdown">
+                    <Calendar selected={p.value} onSelect={(d) => { p.onChange?.(d); setOpen(false) }} />
+                </div>
+            </Show>
+        </div>
+    )
+}
+
+// ================================================================
+// Animation components
+// ================================================================
+
+export const AnimateIn: ParentComponent<{ class?: string; delay?: number }> = (p) => (
+    <div class={cx('gui-animate-in', p.class)} style={p.delay && p.delay > 0 ? { 'animation-delay': `${p.delay}ms` } : undefined}>
+        {p.children}
+    </div>
+)
+
+export const AnimatePresence: ParentComponent<{ show: boolean; animation?: string; duration?: number; class?: string }> = (p) => {
+    const [shouldRender, setShouldRender] = createSignal(p.show)
+    const [isAnimating, setIsAnimating] = createSignal(false)
+
+    createEffect(() => {
+        if (p.show) {
+            setShouldRender(true)
+            requestAnimationFrame(() => setIsAnimating(true))
+        } else {
+            setIsAnimating(false)
+            const timer = setTimeout(() => setShouldRender(false), p.duration ?? 200)
+            onCleanup(() => clearTimeout(timer))
+        }
+    })
+
+    return (
+        <Show when={shouldRender()}>
+            <div
+                class={cx('gui-animate-presence', `gui-animate-presence--${p.animation || 'fade'}`, isAnimating() && p.show ? 'gui-animate-presence--enter' : 'gui-animate-presence--exit', p.class)}
+                style={{ 'transition-duration': `${p.duration ?? 200}ms`, 'transition-timing-function': 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+            >{p.children}</div>
+        </Show>
+    )
+}
+

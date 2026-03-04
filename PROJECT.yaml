@@ -1,0 +1,20 @@
+name: geenius-ui
+description: Shared UI component library for React and Solid with Tailwind and Vanilla CSS variants
+type: library
+priority: high
+status: active
+tags:
+  - ui-library
+  - react
+  - solid
+  - components
+  - design-system
+owner: mxn2020
+repository: https://github.com/mxn2020/geenius-ui
+deploy_url: null  # Library package — published to npm, not deployed
+npm_packages:
+  - "@geenius-ui/react"
+  - "@geenius-ui/react-css"
+  - "@geenius-ui/solid"
+  - "@geenius-ui/solid-css"
+  - "@geenius-ui/shared"

@@ -1,0 +1,8 @@
+services:
+  npm:
+    scope: "@geenius-ui"
+    registry: https://registry.npmjs.org
+    access: public
+  github:
+    owner: mxn2020
+    repo: geenius-ui

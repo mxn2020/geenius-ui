@@ -37,41 +37,41 @@ export { Slider } from './Slider'
 export { ToggleGroup, ToggleGroupItem } from './ToggleGroup'
 
 // Compound components with context
-export { 
-  Dialog, 
-  DialogTrigger, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogClose 
+export {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose
 } from './Dialog'
 
-export { 
-  DropdownMenu, 
-  DropdownMenuTrigger, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuLabel, 
-  DropdownMenuCheckboxItem 
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+  DropdownMenuCheckboxItem
 } from './DropdownMenu'
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './Collapsible'
 
 export { Alert, AlertTitle, AlertDescription, AlertIcon, CompoundAlert } from './Alert'
 
-export { 
-  AlertDialog, 
-  AlertDialogTrigger, 
-  AlertDialogContent, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogAction, 
-  AlertDialogCancel 
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel
 } from './AlertDialog'
 
 export {
@@ -106,6 +106,34 @@ export { EmptyState, type EmptyStateProps, type EmptyStateVariant, NoSearchResul
 // Modal components
 export { ScrollArea } from './ScrollArea'
 
+// Resizable components
+export {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from './Resizable'
+
+// Toggle standalone
+export { Toggle } from './Toggle'
+
+// Sheet components
+export {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from './Sheet'
+
+// Animation components
+export { AnimateIn } from './AnimateIn'
+export { AnimatePresence, AnimateGroup } from './AnimatePresence'
+
+// Additional loading components
+export { LoadingSpinner } from './LoadingSpinner'
 
 /* Ideas for additional components
 
@@ -137,3 +165,4 @@ export { QRCode } from './QRCode'
 export { Barcode } from './Barcode'
 
 */
+
