@@ -48,11 +48,11 @@
         "@geenius-ui/shared": "workspace:*",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
-        "tailwind-merge": "^2.6.0",
+        "tailwind-merge": "^3.5.0",
         "@tanstack/match-sorter-utils": "^8.19.4",
         "@tanstack/react-router": "^1.163.3",
         "@tanstack/react-table": "^8.21.3",
-        "lucide-react": "^0.576.0"
+        "lucide-react": "^0.577.0"
     },
     "devDependencies": {
         "@types/react": "^19.0.0",
