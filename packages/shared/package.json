@@ -1,6 +1,6 @@
 {
     "name": "@geenius-ui/shared",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "private": false,
     "type": "module",
     "description": "Shared types and constants for @geenius-ui",

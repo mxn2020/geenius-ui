@@ -2,7 +2,7 @@
   "name": "@geenius-ui/monorepo",
   "private": true,
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Geenius UI — Shared component library for React and Solid",
   "author": "Mehdi Nabhani <mehdi@geenius.app>",
   "license": "MIT",
