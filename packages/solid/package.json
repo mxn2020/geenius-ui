@@ -47,6 +47,7 @@
     },
     "dependencies": {
         "@geenius-ui/shared": "workspace:*",
+        "@tanstack/match-sorter-utils": "^8.11.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "lucide-solid": "^0.576.0",
@@ -57,6 +58,16 @@
         "typescript": "^5.7.0"
     },
     "peerDependencies": {
-        "solid-js": "^1.9.0"
+        "solid-js": "^1.9.0",
+        "@tanstack/solid-table": "^8.20.0",
+        "@tanstack/solid-router": "^1.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@tanstack/solid-table": {
+            "optional": true
+        },
+        "@tanstack/solid-router": {
+            "optional": true
+        }
     }
 }

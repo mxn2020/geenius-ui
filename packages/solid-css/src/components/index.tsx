@@ -84,16 +84,18 @@ export const Alert: ParentComponent<{ variant?: string; icon?: JSX.Element; titl
     </div>
 )
 
-export const Avatar: Component<{ src?: string; alt?: string; fallback?: JSX.Element; size?: 'sm' | 'md' | 'lg' | 'xl'; class?: string }> = (p) => (
+export const Avatar: ParentComponent<{ src?: string; alt?: string; fallback?: JSX.Element; size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'; class?: string }> = (p) => (
     <div class={cx('gui-avatar', `gui-avatar--${p.size || 'md'}`, p.class)}>
-        <Show when={p.src} fallback={<span class="gui-avatar__fallback">{p.fallback}</span>}>
-            <img class="gui-avatar__image" src={p.src} alt={p.alt || ''} />
-        </Show>
+        {p.children ?? (
+            <Show when={p.src} fallback={<span class="gui-avatar__fallback">{p.fallback}</span>}>
+                <img class="gui-avatar__image" src={p.src} alt={p.alt || ''} />
+            </Show>
+        )}
     </div>
 )
 
-export const Skeleton: Component<{ width?: string; height?: string; circular?: boolean; class?: string }> = (p) => (
-    <div class={cx('gui-skeleton', p.circular && 'gui-skeleton--circular', p.class)} style={{ width: p.width, height: p.height }} />
+export const Skeleton: Component<{ width?: string; height?: string; circular?: boolean; variant?: 'default' | 'text' | 'circular'; class?: string; style?: JSX.CSSProperties }> = (p) => (
+    <div class={cx('gui-skeleton', (p.circular || p.variant === 'circular') && 'gui-skeleton--circular', p.variant === 'text' && 'gui-skeleton--text', p.class)} style={{ width: p.width, height: p.height, ...p.style }} />
 )
 
 export const Progress: Component<{ value: number; max?: number; class?: string }> = (p) => (
@@ -530,3 +532,198 @@ export const AnimatePresence: ParentComponent<{ show: boolean; animation?: strin
     )
 }
 
+// AnimateGroup (staggered animations)
+export const AnimateGroup: ParentComponent<{ stagger?: number; class?: string }> = (p) => (
+    <div class={cx('gui-animate-group', p.class)} style={{ '--gui-animate-stagger': `${p.stagger ?? 50}ms` } as JSX.CSSProperties}>{p.children}</div>
+)
+
+// ================================================================
+// Badge variants
+// ================================================================
+import type { BadgeVariant, PriorityLevel } from '../lib/types'
+
+const statusBadgeVariants: Record<string, string> = { active: 'success', completed: 'primary', on_hold: 'warning', cancelled: 'danger' }
+export const StatusBadge: Component<{ status: 'active' | 'completed' | 'on_hold' | 'cancelled'; size?: 'sm' | 'md' | 'lg'; class?: string }> = (p) => (
+    <Badge variant={statusBadgeVariants[p.status]} size={p.size} class={p.class}>{p.status.charAt(0).toUpperCase() + p.status.slice(1).replace('_', ' ')}</Badge>
+)
+
+const priorityVariants: Record<string, string> = { low: 'secondary', medium: 'info', high: 'warning', urgent: 'danger' }
+export const PriorityBadge: Component<{ priority: PriorityLevel; size?: 'sm' | 'md' | 'lg'; class?: string }> = (p) => (
+    <Badge variant={priorityVariants[p.priority]} size={p.size} class={p.class}>{p.priority.charAt(0).toUpperCase() + p.priority.slice(1)}</Badge>
+)
+
+const taskStatusVariants: Record<string, string> = { todo: 'secondary', in_progress: 'info', completed: 'success', cancelled: 'danger', blocked: 'destructive' }
+const taskStatusLabels: Record<string, string> = { todo: 'To Do', in_progress: 'In Progress', completed: 'Completed', cancelled: 'Cancelled', blocked: 'Blocked' }
+export const TaskStatusBadge: Component<{ status: 'todo' | 'in_progress' | 'completed' | 'cancelled' | 'blocked'; size?: 'sm' | 'md' | 'lg'; class?: string }> = (p) => (
+    <Badge variant={taskStatusVariants[p.status]} size={p.size} class={p.class}>{taskStatusLabels[p.status]}</Badge>
+)
+
+// ================================================================
+// Skeleton variants
+// ================================================================
+
+export const SkeletonText: Component<{ lines?: number; lastLineWidth?: string; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-group', p.class)}>
+        {Array.from({ length: p.lines ?? 3 }).map((_, i, arr) => (
+            <Skeleton height={`16px`} style={i === arr.length - 1 ? { width: p.lastLineWidth ?? '80%' } : undefined} />
+        ))}
+    </div>
+)
+
+export const SkeletonAvatar: Component<{ size?: 'sm' | 'md' | 'lg' | 'xl'; class?: string }> = (p) => {
+    const px: Record<string, string> = { sm: '32px', md: '40px', lg: '48px', xl: '64px' }
+    return <Skeleton circular width={px[p.size ?? 'md']} height={px[p.size ?? 'md']} class={p.class} />
+}
+
+export const SkeletonCard: Component<{ hasImage?: boolean; hasAvatar?: boolean; lines?: number; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-group', p.class)}>
+        <Show when={p.hasImage}><Skeleton height="192px" /></Show>
+        <div style={{ display: 'flex', gap: '12px', 'align-items': 'center' }}>
+            <Show when={p.hasAvatar}><SkeletonAvatar /></Show>
+            <div style={{ flex: '1', display: 'flex', 'flex-direction': 'column', gap: '8px' }}>
+                <Skeleton height="20px" style={{ width: '75%' }} />
+                <Skeleton height="16px" style={{ width: '50%' }} />
+            </div>
+        </div>
+        <Show when={(p.lines ?? 3) > 0}><SkeletonText lines={p.lines ?? 3} /></Show>
+    </div>
+)
+
+export const SkeletonTable: Component<{ rows?: number; columns?: number; hasHeader?: boolean; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-group', p.class)}>
+        <Show when={p.hasHeader ?? true}>
+            <div style={{ display: 'flex', gap: '16px' }}>
+                {Array.from({ length: p.columns ?? 4 }).map(() => <Skeleton height="16px" style={{ flex: '1' }} />)}
+            </div>
+        </Show>
+        {Array.from({ length: p.rows ?? 5 }).map(() => (
+            <div style={{ display: 'flex', gap: '16px' }}>
+                {Array.from({ length: p.columns ?? 4 }).map(() => <Skeleton height="40px" style={{ flex: '1' }} />)}
+            </div>
+        ))}
+    </div>
+)
+
+export const SkeletonGrid: ParentComponent<{ items?: number; columns?: number; itemHeight?: number; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-grid', p.class)} style={{ 'grid-template-columns': `repeat(${p.columns ?? 3}, 1fr)` }}>
+        {Array.from({ length: p.items ?? 6 }).map(() => <Skeleton height={`${p.itemHeight ?? 200}px`} />)}
+    </div>
+)
+
+export const SkeletonForm: Component<{ fields?: number; hasSubmit?: boolean; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-group', p.class)}>
+        {Array.from({ length: p.fields ?? 4 }).map(() => (
+            <div style={{ display: 'flex', 'flex-direction': 'column', gap: '8px' }}>
+                <Skeleton height="16px" style={{ width: '25%' }} />
+                <Skeleton height="40px" />
+            </div>
+        ))}
+        <Show when={p.hasSubmit ?? true}><Skeleton height="40px" style={{ width: '128px' }} /></Show>
+    </div>
+)
+
+export const SkeletonMetricCard: Component<{ hasIcon?: boolean; hasTrend?: boolean; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-group', p.class)}>
+        <div style={{ display: 'flex', 'justify-content': 'space-between', 'align-items': 'center' }}>
+            <div style={{ display: 'flex', gap: '12px', 'align-items': 'center', flex: '1' }}>
+                <Show when={p.hasIcon ?? true}><Skeleton height="48px" style={{ width: '48px', 'border-radius': '8px' }} /></Show>
+                <div style={{ flex: '1', display: 'flex', 'flex-direction': 'column', gap: '8px' }}>
+                    <Skeleton height="16px" style={{ width: '66%' }} />
+                    <Skeleton height="24px" style={{ width: '50%' }} />
+                </div>
+            </div>
+            <Show when={p.hasTrend ?? true}><Skeleton circular width="32px" height="32px" /></Show>
+        </div>
+        <Skeleton height="12px" />
+    </div>
+)
+
+export const SkeletonList: Component<{ items?: number; hasAvatar?: boolean; hasSecondary?: boolean; class?: string }> = (p) => (
+    <div class={cx('gui-skeleton-group', p.class)}>
+        {Array.from({ length: p.items ?? 5 }).map(() => (
+            <div style={{ display: 'flex', gap: '12px', 'align-items': 'center' }}>
+                <Show when={p.hasAvatar}><SkeletonAvatar /></Show>
+                <div style={{ flex: '1', display: 'flex', 'flex-direction': 'column', gap: '8px' }}>
+                    <Skeleton height="16px" style={{ width: '75%' }} />
+                    <Show when={p.hasSecondary ?? true}><Skeleton height="12px" style={{ width: '50%' }} /></Show>
+                </div>
+            </div>
+        ))}
+    </div>
+)
+
+// ================================================================
+// Avatar compound
+// ================================================================
+
+export const AvatarImage: Component<{ src?: string; alt?: string; class?: string; onStatusChange?: (s: string) => void }> = (p) => {
+    const [status, setStatus] = createSignal<string>('idle')
+    const onLoad = () => { setStatus('loaded'); p.onStatusChange?.('loaded') }
+    const onError = () => { setStatus('error'); p.onStatusChange?.('error') }
+    return (
+        <Show when={p.src}>
+            <img src={p.src} alt={p.alt} class={cx('gui-avatar__image', p.class)} onLoad={onLoad} onError={onError} style={{ display: status() === 'loaded' ? 'block' : 'none' }} />
+        </Show>
+    )
+}
+
+export const AvatarFallback: ParentComponent<{ class?: string; delayMs?: number }> = (p) => {
+    const [show, setShow] = createSignal((p.delayMs ?? 0) === 0)
+    createEffect(() => { if ((p.delayMs ?? 0) > 0) { const t = setTimeout(() => setShow(true), p.delayMs!); onCleanup(() => clearTimeout(t)) } })
+    return <Show when={show()}><span class={cx('gui-avatar__fallback', p.class)}>{p.children}</span></Show>
+}
+
+export function getAvatarInitials(name: string): string {
+    return name.split(' ').slice(0, 2).map(w => w.charAt(0).toUpperCase()).join('')
+}
+
+export const CompoundAvatar: Component<{ src?: string; alt?: string; name?: string; fallback?: JSX.Element; size?: 'sm' | 'md' | 'lg' | 'xl'; class?: string }> = (p) => {
+    const [imgStatus, setImgStatus] = createSignal('idle')
+    const shouldFallback = () => !p.src || imgStatus() === 'error'
+    const initials = () => p.name ? getAvatarInitials(p.name) : ''
+    const displayAlt = () => p.alt || p.name || 'Avatar'
+    return (
+        <Avatar src={undefined} size={p.size} class={p.class}>
+            <Show when={p.src}><AvatarImage src={p.src} alt={displayAlt()} onStatusChange={setImgStatus} /></Show>
+            <Show when={shouldFallback()}><AvatarFallback>{p.fallback || initials() || displayAlt().charAt(0).toUpperCase()}</AvatarFallback></Show>
+        </Avatar>
+    )
+}
+
+// ================================================================
+// Section compound sub-components
+// ================================================================
+
+export const SectionHeader: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-section__header', p.class)}>{p.children}</div>
+export const SectionTitle: ParentComponent<{ class?: string }> = (p) => <h2 class={cx('gui-section__title', p.class)}>{p.children}</h2>
+export const SectionDescription: ParentComponent<{ class?: string }> = (p) => <p class={cx('gui-section__description', p.class)}>{p.children}</p>
+export const SectionContent: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-section__content', p.class)}>{p.children}</div>
+export const CompoundSection = Section
+
+// ================================================================
+// List compound sub-components
+// ================================================================
+
+export const ListContainer: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-list-container', p.class)}>{p.children}</div>
+export const CompactListView: ParentComponent<{ class?: string }> = (p) => <div class={cx('gui-compact-list', p.class)}>{p.children}</div>
+
+export function DataList<T>(props: { data: T[]; renderItem: (item: T, i: number) => JSX.Element; keyExtractor?: (item: T, i: number) => string; class?: string; emptyMessage?: string }) {
+    return (
+        <Show when={props.data.length > 0} fallback={<EmptyState title={props.emptyMessage || 'No items'} />}>
+            <List class={props.class}>{props.data.map((item, i) => <li>{props.renderItem(item, i)}</li>)}</List>
+        </Show>
+    )
+}
+
+// EmptyState presets
+export const NoSearchResults: Component<{ title?: string; description?: string; action?: JSX.Element; class?: string }> = (p) => (
+    <EmptyState title={p.title ?? 'No results found'} description={p.description ?? 'Try adjusting your search or using different keywords.'} action={p.action} class={p.class} />
+)
+export const NoFilterResults: Component<{ title?: string; description?: string; action?: JSX.Element; class?: string }> = (p) => (
+    <EmptyState title={p.title ?? 'No matches'} description={p.description ?? 'No items match your current filters. Try adjusting or clearing them.'} action={p.action} class={p.class} />
+)
+
+// SimpleCostDisplay
+export const SimpleCostDisplay: Component<{ value: number; currency?: string; class?: string }> = (p) => (
+    <span class={cx('gui-cost-display gui-cost-display--simple', p.class)}>{p.currency || '$'}{p.value.toFixed(2)}</span>
+)

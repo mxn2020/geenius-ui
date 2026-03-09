@@ -21,3 +21,9 @@ export * from './lib/types'
 export * from './lib/helpers'
 
 export * from './lib/animation'
+
+// TanStack integrations (requires optional peer deps)
+export { DataTable as TanStackDataTable, TablePagination, fuzzyFilter } from './tanstack-table'
+
+export * from './tanstack-ui'
+

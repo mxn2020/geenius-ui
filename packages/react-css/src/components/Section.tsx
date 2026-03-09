@@ -22,3 +22,27 @@ export const Section = memo(
     ),
 )
 Section.displayName = 'Section'
+
+// Compound Section sub-components
+export const SectionHeader = memo(({ children, className }: { children: ReactNode; className?: string }) => (
+    <div className={cx('gui-section__header', className)}>{children}</div>
+))
+SectionHeader.displayName = 'SectionHeader'
+
+export const SectionTitle = memo(({ children, className }: { children: ReactNode; className?: string }) => (
+    <h2 className={cx('gui-section__title', className)}>{children}</h2>
+))
+SectionTitle.displayName = 'SectionTitle'
+
+export const SectionDescription = memo(({ children, className }: { children: ReactNode; className?: string }) => (
+    <p className={cx('gui-section__description', className)}>{children}</p>
+))
+SectionDescription.displayName = 'SectionDescription'
+
+export const SectionContent = memo(({ children, className }: { children: ReactNode; className?: string }) => (
+    <div className={cx('gui-section__content', className)}>{children}</div>
+))
+SectionContent.displayName = 'SectionContent'
+
+export const CompoundSection = Section
+
