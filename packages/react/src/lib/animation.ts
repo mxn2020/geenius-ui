@@ -160,6 +160,7 @@ export function useAnimatedOpen(
   const animationStyle: React.CSSProperties = {
     animationDuration: `${duration}ms`,
     transitionDuration: `${duration}ms`,
+    transitionProperty: 'opacity, transform',
     animationTimingFunction: ANIMATION_EASING.easeOut,
   }
 

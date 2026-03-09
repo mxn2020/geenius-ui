@@ -118,6 +118,7 @@ export function createAnimatedOpen(
     const animationStyle = (): JSX.CSSProperties => ({
         'animation-duration': `${duration}ms`,
         'transition-duration': `${duration}ms`,
+        'transition-property': 'opacity, transform',
         'animation-timing-function': ANIMATION_EASING.easeOut,
     })
 

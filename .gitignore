@@ -6,3 +6,7 @@ dist/
 .env
 .env.local
 .env.*.local
+
+# Added by AI Agent
+.env.*
+!.env.example

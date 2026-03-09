@@ -518,7 +518,8 @@ export function SelectContent(props: SelectContentProps) {
             style={style()}
             class={cn(
               'z-50 max-h-72 overflow-hidden rounded-md border border-border bg-card shadow-lg',
-              'origin-top data-[state=open]:animate-in data-[state=closed]:animate-out',
+              local.side === 'bottom' ? 'origin-top' : 'origin-bottom',
+              'data-[state=open]:animate-in data-[state=closed]:animate-out',
               'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
               'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
               local.class
